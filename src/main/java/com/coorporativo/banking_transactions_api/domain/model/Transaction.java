@@ -1,5 +1,7 @@
 package com.coorporativo.banking_transactions_api.domain.model;
 
+
+
 public class Transaction {
 
 

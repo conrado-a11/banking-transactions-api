@@ -2,12 +2,15 @@ package com.coorporativo.banking_transactions_api.infrastructure.adapter.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List; //
 
 
 @Entity
 @Table(name = "accounts")
+@Data
 public class AccountEntity {
     @Id
     private String id;

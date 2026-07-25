@@ -31,8 +31,8 @@ public class GlobalExceptionHandler {
         ErrorMessage error = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 "Solicitud incorrecta",
-                ex.getMessage(),
-                request.getRequestURI(),
+                request.getRequestURI(), // Pasamos el Path al puesto 3
+                ex.getMessage(),          // Pasamos el Message al puesto 4
                 Collections.singletonList("Operación rechazada debido a fondos insuficientes.")
         );
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
@@ -42,8 +42,8 @@ public class GlobalExceptionHandler {
         ErrorMessage error = new ErrorMessage(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Error Interno del Servidor",
-                "Ocurrió un error interno inesperado",
-                request.getRequestURI(),
+                request.getRequestURI(), // Pasamos el Path al puesto 3
+                "Ocurrió un error interno inesperado", // Pasamos el Message al puesto 4
                 Collections.singletonList(ex.getMessage())
 
         );

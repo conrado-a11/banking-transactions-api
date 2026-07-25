@@ -31,7 +31,7 @@ public class WithdrawMoneyService implements WithdrawMoneyUseCase {
 
 
         String transactionId = "tx-" + UUID.randomUUID().toString().substring(0,8);
-        account.witdraw(new Money(command.getAmount()), transactionId);
+        account.withdraw(new Money(command.getAmount()), transactionId);
 
         Account updatedAccount = accountRepository.save(account);
         return maptToDto(updatedAccount);
@@ -45,8 +45,6 @@ public class WithdrawMoneyService implements WithdrawMoneyUseCase {
                 account.getTransaction().stream()
                         .map(t-> new TransactionDto(t.getId(), t.getType(), t.getAmount().getAmount()))
                         .collect(Collectors.toList())
-
-
 
         );
 

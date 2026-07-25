@@ -26,13 +26,13 @@ public class Account {
         this.transaction = new ArrayList<>(transaction);
     }
     //Regla de negocio :retirar  con validacion limpia
-    public void witdraw(Money amount, String transationId){
+    public void withdraw(Money amount, String transactionId){
         if(this.balance.isLessThan(amount)){
             throw new InsufficientResourcesException("Saldo insuficiente para este retiro");
 
         }
         this.balance = this.balance.subtract(amount);
-        this.transaction.add(new Transaction(transationId, "WITHDRAW", amount ));
+        this.transaction.add(new Transaction(transactionId, "WITHDRAW", amount ));
 
     }
 
@@ -60,5 +60,13 @@ public class Account {
         return transaction;
     }
 
-
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", customerId='" + customerId + '\'' +
+                ", balance=" + balance +
+                ", transaction=" + transaction +
+                '}';
+    }
 }

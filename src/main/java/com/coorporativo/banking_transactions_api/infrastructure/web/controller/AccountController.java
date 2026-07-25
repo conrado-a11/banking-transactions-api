@@ -1,17 +1,17 @@
 package com.coorporativo.banking_transactions_api.infrastructure.web.controller;
 
 
-import com.coorporativo.banking_transactions_api.application.dto.AccountDetailsDto;
-import com.coorporativo.banking_transactions_api.application.dto.CreateAccountCommand;
-import com.coorporativo.banking_transactions_api.application.dto.DepositMoneyCommand;
-import com.coorporativo.banking_transactions_api.application.dto.WithdrawMoneyCommand;
-import com.coorporativo.banking_transactions_api.application.port.CreateAccountUseCase;
-import com.coorporativo.banking_transactions_api.application.port.DepositMoneyUseCase;
-import com.coorporativo.banking_transactions_api.application.port.GetAccountDetailsUseCase;
-import com.coorporativo.banking_transactions_api.application.port.WithdrawMoneyUseCase;
+import com.coorporativo.banking_transactions_api.application.dto.*;
+import com.coorporativo.banking_transactions_api.application.port.*;
+import com.coorporativo.banking_transactions_api.domain.model.Account;
+import com.coorporativo.banking_transactions_api.domain.port.AccountRepository;
+import com.coorporativo.banking_transactions_api.infrastructure.adapter.entity.AccountEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -21,19 +21,29 @@ public class AccountController {
     private final DepositMoneyUseCase depositMoneyUseCase;
     private final WithdrawMoneyUseCase withdrawMoneyUseCase;
     private final GetAccountDetailsUseCase getAccountDetailsUseCase;
+    private final AccountRepository accountRepository;
+    private final TransferMoneyUseCase transferMoneyUseCase; // <--- Agrégalo arriba
+
+
+
 
     public AccountController(CreateAccountUseCase createAccountUseCase,
                              DepositMoneyUseCase depositMoneyUseCase,
                              WithdrawMoneyUseCase withdrawMoneyUseCase,
-                             GetAccountDetailsUseCase getAccountDetailsUseCase) {
+                             GetAccountDetailsUseCase getAccountDetailsUseCase,
+                             AccountRepository accountRepository,
+                             TransferMoneyUseCase transferMoneyUseCase) {
         this.createAccountUseCase = createAccountUseCase;
         this.depositMoneyUseCase = depositMoneyUseCase;
         this.withdrawMoneyUseCase = withdrawMoneyUseCase;
         this.getAccountDetailsUseCase = getAccountDetailsUseCase;
+        this.accountRepository = accountRepository;
+        this.transferMoneyUseCase = transferMoneyUseCase;// <--- Y aquí
     }
     @GetMapping
-    public ResponseEntity<String>healthCheck(){
-        return ResponseEntity.ok("ok");
+    public ResponseEntity<List<AccountEntity>>getAllAccount(){
+        List<AccountEntity> accounts = accountRepository.findAll(); // O .findAll(), .run(), mira cómo se llama el método dentro de GetAccountDetailsUseCase
+        return ResponseEntity.ok(accounts);
     }
     @PostMapping
     public ResponseEntity<AccountDetailsDto> createAccount(@RequestBody CreateAccountCommand command){
@@ -60,5 +70,16 @@ public class AccountController {
         return  ResponseEntity.ok(response);
 
     }
+    @PostMapping("/{id}/transactions")
+    public ResponseEntity<Void> transferMoney(@PathVariable String id, @RequestBody TransferMoneyCommand commandBody) {
+        // Combinas el ID de origen de la URL con el destino y monto del cuerpo
+        TransferMoneyCommand command = new TransferMoneyCommand(id, commandBody.getTargetAccountId(), commandBody.getAmount());
+
+        // Ejecutas la lógica en tu caso de uso de negocio
+        transferMoneyUseCase.execute(command);
+
+        return ResponseEntity.ok().build();
+    }
+
 
 }

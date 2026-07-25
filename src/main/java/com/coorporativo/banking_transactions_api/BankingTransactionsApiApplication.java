@@ -1,13 +1,17 @@
 package com.coorporativo.banking_transactions_api;
 
+
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class BankingTransactionsApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BankingTransactionsApiApplication.class, args);
-	}
+        SpringApplication.run(BankingTransactionsApiApplication.class, args);}
+
 
 }
