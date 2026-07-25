@@ -1,29 +1,3 @@
-# 🏦 API de Transacciones Bancarias
-
-API REST profesional para la gestión y transferencia de dinero entre cuentas bancarias, desarrollada bajo los principios de **Arquitectura Hexagonal (Clean Architecture)** y **Domain-Driven Design (DDD)**.
-
----
-
-## 🛠️ Tecnologías Utilizadas
-* **Java 17 / 21** - Lenguaje principal.
-* **Spring Boot 3.x** - Framework de desarrollo.
-* **Spring Data JPA** - Persistencia de datos.
-* **H2 Database** - Base de datos en memoria para pruebas rápidas.
-* **Postman** - Documentación y pruebas de endpoints.
-
----
-
-## 📐 Arquitectura del Proyecto (Hexagonal)
-El proyecto está estructurado de manera que las reglas de negocio estén completamente aisladas de la infraestructura externa:
-
-* **Domain (Núcleo):** Contiene los modelos lógicos (`Account`, `Money`, `Transaction`) libres de frameworks.
-* **Application (Casos de Uso):** Define los puertos e implementa los servicios como `TransferMoneyService`.
-* **Infrastructure (Adaptadores):** Maneja los controladores REST (`AccountController`) y los repositorios JPA de la base de datos.
-
----
-
-## 📖 Documentación de la API (Endpoints)
-
 ### 1. Transferir Dinero
 Permite mover saldos entre dos cuentas existentes de forma segura.
 
@@ -42,10 +16,59 @@ Permite mover saldos entre dos cuentas existentes de forma segura.
 
 ---
 
+### 2. Consultar Cuenta por ID
+Obtiene el estado actual y saldo de una cuenta específica.
+
+* **Método:** `GET`
+* **URL:** `/api/accounts/{id}`
+* **Respuesta Exitosa:** `200 OK`
+* **Response Body (JSON):**
+```json
+{
+  "id": "acc-1",
+  "customerId": "cliente-123",
+  "balance": 500000.0
+}
+```
+
+---
+
+### 3. Realizar un Depósito
+Permite ingresar dinero en efectivo a una cuenta.
+
+* **Método:** `POST`
+* **URL:** `/api/accounts/{id}/deposit`
+* **Request Body (JSON):**
+```json
+{
+  "amount": 50.0
+}
+```
+* **Validaciones:** El monto debe ser mayor a cero.
+* **Respuesta Exitosa:** `200 OK`
+
+---
+
+### 4. Realizar un Retiro
+Permite retirar fondos de una cuenta si tiene saldo suficiente.
+
+* **Método:** `POST`
+* **URL:** `/api/accounts/{id}/withdraw`
+* **Request Body (JSON):**
+```json
+{
+  "amount": 30.0
+}
+```
+* **Validaciones:** El monto no puede superar el saldo actual de la cuenta.
+* **Respuesta Exitosa:** `200 OK`
+
+---
+
 ## 🚀 Cómo Probar el Servicio (Postman)
 Para facilitarle la revisión a los reclutadores, he incluido una colección de pruebas lista para usar:
 
-1. Descarga el archivo de colección ubicado en la carpeta `postman/banking-api.json` de este repositorio.
+1. Descarga el archivo de colección ubicado en la carpeta `postman/banking-api-collection.json` de este repositorio.
 2. Abre **Postman** e impórtalo.
 3. Inicia la aplicación en tu IDE (Spring Boot levantará la base de datos H2 automáticamente).
 4. Ejecuta las peticiones en orden para validar el comportamiento del sistema.
